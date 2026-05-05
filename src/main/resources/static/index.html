@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Result Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #0d0f14;
+  --ink-soft:   #2a2d38;
+  --ink-muted:  #5a5f73;
+  --cream:      #f8f6f1;
+  --cream-dark: #eeebe3;
+  --accent:     #2563eb;
+  --accent-2:   #7c3aed;
+  --teal:       #0d9488;
+  --amber:      #d97706;
+  --rose:       #e11d48;
+  --green:      #059669;
+  --border:     #e2ddd4;
+  --shadow-sm:  0 1px 3px rgba(13,15,20,0.08), 0 1px 2px rgba(13,15,20,0.06);
+  --shadow-md:  0 4px 16px rgba(13,15,20,0.10), 0 2px 6px rgba(13,15,20,0.08);
+  --shadow-lg:  0 12px 40px rgba(13,15,20,0.14), 0 4px 12px rgba(13,15,20,0.10);
+  --radius:     14px;
+  --radius-sm:  8px;
+  --font:       'Sora', sans-serif;
+  --mono:       'JetBrains Mono', monospace;
+  --nav-h:      68px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: rgba(248,246,241,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 clamp(16px, 5vw, 48px);
+  gap: 16px;
+}
+
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em;
+  color: var(--ink); text-decoration: none;
+}
+
+.nav-logo {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: grid; place-items: center;
+  font-size: 16px; color: #fff; font-weight: 800;
+}
+
+.nav-links {
+  display: flex; align-items: center; gap: 4px;
+  margin-left: auto; list-style: none;
+}
+
+.nav-links a {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--ink-muted); text-decoration: none;
+  transition: all .18s ease;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: var(--ink); color: #fff;
+}
+
+.nav-btn {
+  margin-left: 8px;
+  padding: 8px 18px; border-radius: 8px;
+  background: var(--accent); color: #fff;
+  font-size: 0.875rem; font-weight: 600;
+  border: none; cursor: pointer;
+  font-family: var(--font);
+  transition: all .18s ease;
+}
+.nav-btn:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  padding: 8px; border: none; background: none; cursor: pointer;
+  margin-left: auto;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--ink); border-radius: 2px;
+  transition: all .2s;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════ */
+.hero {
+  padding-top: calc(var(--nav-h) + 72px);
+  padding-bottom: 80px;
+  padding-left: clamp(16px, 5vw, 48px);
+  padding-right: clamp(16px, 5vw, 48px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 48px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #ede9fe; color: var(--accent-2);
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hero-tag::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--accent-2); border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(1.4); }
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.08;
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
+}
+
+.hero h1 span {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 1.05rem; color: var(--ink-muted); line-height: 1.7;
+  max-width: 440px; margin-bottom: 36px;
+}
+
+.hero-cta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 13px 28px; border-radius: 10px;
+  background: var(--ink); color: #fff;
+  font-size: 0.9rem; font-weight: 600;
+  border: none; cursor: pointer; font-family: var(--font);
+  transition: all .2s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { background: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.btn-secondary {
+  padding: 13px 28px; border-radius: 10px;
+  background: transparent; color: var(--ink);
+  font-size: 0.9rem; font-weight: 600;
+  border: 2px solid var(--border); cursor: pointer;
+  font-family: var(--font); transition: all .2s;
+  text-decoration: none; display: inline-flex;
+  align-items: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+/* Hero Visual */
+.hero-visual {
+  position: relative;
+  display: flex; flex-direction: column; gap: 12px;
+  animation: floatIn .7s ease both;
+}
+
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.result-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-md);
+  transition: transform .2s;
+}
+.result-card:hover { transform: translateX(4px); }
+
+.result-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.student-info { display: flex; align-items: center; gap: 10px; }
+
+.avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 0.875rem; color: #fff;
+}
+
+.avatar-blue  { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+.avatar-teal  { background: linear-gradient(135deg, #0d9488, #059669); }
+.avatar-amber { background: linear-gradient(135deg, #d97706, #dc2626); }
+
+.student-name  { font-weight: 600; font-size: 0.9rem; }
+.student-roll  { font-size: 0.75rem; color: var(--ink-muted); font-family: var(--mono); }
+
+.grade-badge {
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 0.8rem; font-weight: 700;
+  font-family: var(--mono);
+}
+
+.grade-O, .grade-A\+ { background: #d1fae5; color: #065f46; }
+.grade-A             { background: #dbeafe; color: #1e40af; }
+.grade-B\+,.grade-B  { background: #ede9fe; color: #5b21b6; }
+.grade-C             { background: #fef3c7; color: #92400e; }
+.grade-F             { background: #fee2e2; color: #991b1b; }
+
+.subject-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 0; border-bottom: 1px dashed var(--border);
+  font-size: 0.82rem;
+}
+.subject-row:last-child { border-bottom: none; }
+
+.subject-name  { color: var(--ink-soft); font-weight: 500; }
+.subject-marks { font-family: var(--mono); font-weight: 600; }
+
+.progress-bar {
+  height: 4px; background: var(--cream-dark);
+  border-radius: 100px; overflow: hidden; flex: 1; margin: 0 10px;
+}
+.progress-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width .4s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STATS STRIP
+═══════════════════════════════════════════════════════════ */
+.stats-strip {
+  background: var(--ink);
+  padding: 32px clamp(16px, 5vw, 48px);
+}
+
+.stats-grid {
+  max-width: 1280px; margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 32px;
+}
+
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800; color: #fff;
+  letter-spacing: -0.04em; display: block;
+}
+.stat-label { font-size: 0.8rem; color: #9ca3af; font-weight: 500; margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   SECTIONS COMMON
+═══════════════════════════════════════════════════════════ */
+.section {
+  padding: 80px clamp(16px, 5vw, 48px);
+  max-width: 1280px; margin: 0 auto;
+}
+
+.section-label {
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.15; margin-bottom: 14px;
+}
+
+.section-sub {
+  font-size: 1rem; color: var(--ink-muted);
+  line-height: 1.7; max-width: 520px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEARCH PORTAL
+═══════════════════════════════════════════════════════════ */
+.search-portal {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 20px; padding: clamp(24px, 4vw, 48px);
+  box-shadow: var(--shadow-lg);
+  margin-top: 40px;
+}
+
+.portal-tabs {
+  display: flex; gap: 4px;
+  background: var(--cream-dark);
+  border-radius: 10px; padding: 4px;
+  margin-bottom: 32px;
+  width: fit-content;
+}
+
+.tab {
+  padding: 8px 18px; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 600;
+  border: none; cursor: pointer;
+  font-family: var(--font);
+  color: var(--ink-muted); background: transparent;
+  transition: all .18s;
+}
+.tab.active {
+  background: #fff; color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px; align-items: end;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-label {
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--ink-muted); letter-spacing: 0.02em; text-transform: uppercase;
+}
+
+.form-input, .form-select {
+  padding: 11px 14px; border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  font-size: 0.9rem; font-family: var(--font);
+  background: var(--cream); color: var(--ink);
+  outline: none; transition: border-color .15s;
+  width: 100%;
+}
+.form-input:focus, .form-select:focus { border-color: var(--accent); background: #fff; }
+
+.search-btn {
+  padding: 11px 24px; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff;
+  font-size: 0.9rem; font-weight: 600;
+  border: none; cursor: pointer; font-family: var(--font);
+  transition: all .18s; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+}
+.search-btn:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+/* Result Table */
+.result-table-wrap {
+  margin-top: 28px; overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.result-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.result-table th {
+  background: var(--cream-dark); padding: 12px 16px;
+  text-align: left; font-size: 0.75rem;
+  font-weight: 700; color: var(--ink-muted);
+  letter-spacing: 0.04em; text-transform: uppercase;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.result-table td {
+  padding: 13px 16px; border-bottom: 1px solid var(--border);
+  color: var(--ink-soft);
+}
+
+.result-table tr:last-child td { border-bottom: none; }
+.result-table tr:hover td { background: #f8f9ff; }
+
+.status-pass {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #d1fae5; color: #065f46;
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 700;
+}
+.status-fail {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #fee2e2; color: #991b1b;
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 700;
+}
+
+.cgpa-display {
+  margin-top: 20px; padding: 16px 20px;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+
+.cgpa-label { color: #9ca3af; font-size: 0.8rem; font-weight: 600; }
+.cgpa-value { color: #fff; font-size: 2rem; font-weight: 800; font-family: var(--mono); }
+
+.cgpa-bar-wrap { flex: 1; min-width: 140px; }
+.cgpa-bar {
+  height: 8px; background: rgba(255,255,255,0.15);
+  border-radius: 100px; overflow: hidden; margin-top: 6px;
+}
+.cgpa-bar-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, #34d399, #6ee7b7);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FEATURES
+═══════════════════════════════════════════════════════════ */
+.features-section { background: #fff; }
+.features-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 80px clamp(16px, 5vw, 48px);
+}
+
+.features-header {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; align-items: center; margin-bottom: 56px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  padding: 28px 24px; border-radius: var(--radius);
+  border: 1px solid var(--border);
+  transition: all .22s ease;
+  position: relative; overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.feature-card.blue::before  { background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.feature-card.teal::before  { background: linear-gradient(90deg, var(--teal), var(--green)); }
+.feature-card.amber::before { background: linear-gradient(90deg, var(--amber), var(--rose)); }
+.feature-card.green::before { background: linear-gradient(90deg, var(--green), var(--teal)); }
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.feature-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: grid; place-items: center;
+  font-size: 20px; margin-bottom: 16px;
+}
+
+.feature-icon.blue  { background: #dbeafe; }
+.feature-icon.teal  { background: #ccfbf1; }
+.feature-icon.amber { background: #fef3c7; }
+.feature-icon.green { background: #d1fae5; }
+
+.feature-title {
+  font-size: 1rem; font-weight: 700; margin-bottom: 8px;
+}
+
+.feature-desc {
+  font-size: 0.85rem; color: var(--ink-muted); line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   API DOCS PREVIEW
+═══════════════════════════════════════════════════════════ */
+.api-section { background: var(--ink); }
+.api-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 80px clamp(16px, 5vw, 48px);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; align-items: start;
+}
+
+.api-section .section-label { color: #818cf8; }
+.api-section .section-title { color: #fff; }
+.api-section .section-sub   { color: #9ca3af; max-width: 420px; }
+
+.endpoint-list { display: flex; flex-direction: column; gap: 8px; margin-top: 32px; }
+
+.endpoint-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  cursor: pointer; transition: all .15s;
+}
+.endpoint-item:hover { background: rgba(255,255,255,0.1); }
+
+.method-badge {
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 0.7rem; font-weight: 700;
+  font-family: var(--mono); flex-shrink: 0;
+  min-width: 48px; text-align: center;
+}
+
+.method-get    { background: #d1fae5; color: #065f46; }
+.method-post   { background: #dbeafe; color: #1e40af; }
+.method-put    { background: #fef3c7; color: #92400e; }
+.method-delete { background: #fee2e2; color: #991b1b; }
+
+.endpoint-path {
+  font-family: var(--mono); font-size: 0.8rem; color: #e2e8f0;
+  flex: 1;
+}
+
+.endpoint-desc { font-size: 0.78rem; color: #9ca3af; }
+
+/* Code Panel */
+.code-panel {
+  background: #13151c; border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden; box-shadow: var(--shadow-lg);
+}
+
+.code-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.red    { background: #ef4444; }
+.dot.yellow { background: #f59e0b; }
+.dot.green  { background: #22c55e; }
+
+.code-title {
+  font-size: 0.75rem; font-family: var(--mono);
+  color: #9ca3af; margin-left: 4px;
+}
+
+.code-body {
+  padding: 20px; font-size: 0.82rem;
+  font-family: var(--mono); color: #e2e8f0;
+  line-height: 1.8; overflow-x: auto;
+}
+
+.kw  { color: #c084fc; }
+.str { color: #86efac; }
+.num { color: #67e8f9; }
+.key { color: #fbbf24; }
+.cmt { color: #6b7280; }
+
+/* ═══════════════════════════════════════════════════════════
+   GRADE TABLE SECTION
+═══════════════════════════════════════════════════════════ */
+.grade-section {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px; align-items: start;
+}
+
+.grade-grid {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 28px;
+}
+
+.grade-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px; border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff; transition: transform .15s;
+}
+.grade-row:hover { transform: translateX(4px); }
+
+.grade-letter {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-weight: 800; font-family: var(--mono); font-size: 0.9rem;
+}
+
+.grade-row:nth-child(1) .grade-letter { background: #d1fae5; color: #065f46; }
+.grade-row:nth-child(2) .grade-letter { background: #d1fae5; color: #065f46; }
+.grade-row:nth-child(3) .grade-letter { background: #dbeafe; color: #1e40af; }
+.grade-row:nth-child(4) .grade-letter { background: #ede9fe; color: #5b21b6; }
+.grade-row:nth-child(5) .grade-letter { background: #ede9fe; color: #5b21b6; }
+.grade-row:nth-child(6) .grade-letter { background: #fef3c7; color: #92400e; }
+.grade-row:nth-child(7) .grade-letter { background: #fee2e2; color: #991b1b; }
+
+.grade-range { font-size: 0.82rem; color: var(--ink-muted); font-family: var(--mono); }
+.grade-point { margin-left: auto; font-weight: 700; font-family: var(--mono); font-size: 0.9rem; }
+
+.gp-bar {
+  flex: 1; height: 4px; background: var(--cream-dark);
+  border-radius: 100px; overflow: hidden;
+}
+.gp-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+/* Chart mock */
+.doughnut-wrap {
+  position: relative; width: 200px; height: 200px;
+  margin: 32px auto;
+}
+
+.doughnut-svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.doughnut-svg circle { fill: none; stroke-width: 28; }
+
+.doughnut-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+
+.doughnut-val  { font-size: 2rem; font-weight: 800; font-family: var(--mono); }
+.doughnut-text { font-size: 0.72rem; color: var(--ink-muted); }
+
+.legend {
+  display: flex; flex-direction: column; gap: 8px; margin-top: 16px;
+}
+.legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; }
+.legend-dot   { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-num   { margin-left: auto; font-weight: 700; font-family: var(--mono); }
+
+/* ═══════════════════════════════════════════════════════════
+   CTA BANNER
+═══════════════════════════════════════════════════════════ */
+.cta-banner {
+  margin: 0 clamp(16px, 5vw, 48px) 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--ink) 0%, #1e1b4b 100%);
+  padding: clamp(36px, 6vw, 64px);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 28px;
+  position: relative; overflow: hidden;
+}
+
+.cta-banner::before {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.3), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800; color: #fff;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+
+.cta-sub { font-size: 0.9rem; color: #9ca3af; }
+
+.cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-white {
+  padding: 12px 24px; border-radius: 10px;
+  background: #fff; color: var(--ink);
+  font-size: 0.9rem; font-weight: 700;
+  border: none; cursor: pointer; font-family: var(--font);
+  transition: all .18s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-white:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+.btn-ghost {
+  padding: 12px 24px; border-radius: 10px;
+  background: rgba(255,255,255,0.08); color: #fff;
+  font-size: 0.9rem; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer; font-family: var(--font);
+  transition: all .18s; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+footer {
+  background: var(--cream-dark);
+  border-top: 1px solid var(--border);
+  padding: 32px clamp(16px, 5vw, 48px);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+
+.footer-brand { font-weight: 700; font-size: 0.9rem; }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { color: var(--ink-muted); font-size: 0.82rem; text-decoration: none; }
+.footer-links a:hover { color: var(--ink); }
+.footer-copy  { font-size: 0.8rem; color: var(--ink-muted); }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE NAV DRAWER
+═══════════════════════════════════════════════════════════ */
+.mobile-nav {
+  position: fixed; top: var(--nav-h); left: 0; right: 0; bottom: 0;
+  background: rgba(248,246,241,0.97); backdrop-filter: blur(12px);
+  z-index: 99; padding: 24px;
+  transform: translateX(-100%); transition: transform .25s ease;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a {
+  padding: 14px 16px; border-radius: 10px;
+  color: var(--ink); text-decoration: none;
+  font-weight: 500; font-size: 1rem;
+  transition: background .15s;
+}
+.mobile-nav a:hover { background: var(--cream-dark); }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .hero               { grid-template-columns: 1fr; }
+  .hero-visual        { display: none; }
+  .features-header    { grid-template-columns: 1fr; }
+  .api-inner          { grid-template-columns: 1fr; }
+  .grade-section      { grid-template-columns: 1fr; }
+  .search-form        { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .nav-links, .nav-btn { display: none; }
+  .hamburger           { display: flex; }
+  .search-form         { grid-template-columns: 1fr; }
+  .hero-cta            { flex-direction: column; }
+  .cta-banner          { text-align: center; justify-content: center; }
+  .cta-actions         { justify-content: center; }
+  footer               { flex-direction: column; text-align: center; }
+  .footer-links        { flex-wrap: wrap; justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATE ON SCROLL
+═══════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-brand">
+    <div class="nav-logo">S</div>
+    StudentPortal
+  </a>
+  <ul class="nav-links">
+    <li><a href="#search"   class="active">🔍 Results</a></li>
+    <li><a href="#features">✨ Features</a></li>
+    <li><a href="#api">📡 API</a></li>
+    <li><a href="#grades">📊 Grades</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('search').scrollIntoView({behavior:'smooth'})">Check Result</button>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#search"   onclick="closeNav()">🔍 Check Results</a>
+  <a href="#features" onclick="closeNav()">✨ Features</a>
+  <a href="#api"      onclick="closeNav()">📡 API Reference</a>
+  <a href="#grades"   onclick="closeNav()">📊 Grade Scale</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Spring Boot · REST API · JPA</div>
+    <h1>Student Result<br><span>Portal</span></h1>
+    <p>A production-grade backend system to manage student records, subject catalogues, and exam results — with automatic grade calculation and CGPA computation.</p>
+    <div class="hero-cta">
+      <a href="#search" class="btn-primary">🔍 Check Result</a>
+      <a href="#api" class="btn-secondary">📡 API Docs</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <!-- Card 1 -->
+    <div class="result-card" style="animation-delay:.1s">
+      <div class="result-card-header">
+        <div class="student-info">
+          <div class="avatar avatar-blue">AS</div>
+          <div>
+            <div class="student-name">Aarav Sharma</div>
+            <div class="student-roll">CS2024001</div>
+          </div>
+        </div>
+        <span class="grade-badge grade-A+">CGPA 9.2</span>
+      </div>
+      <div class="subject-row">
+        <span class="subject-name">Data Structures</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:92%"></div></div>
+        <span class="subject-marks">92/100</span>
+      </div>
+      <div class="subject-row">
+        <span class="subject-name">Operating Systems</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:87%"></div></div>
+        <span class="subject-marks">87/100</span>
+      </div>
+      <div class="subject-row">
+        <span class="subject-name">Database Mgmt</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+        <span class="subject-marks">94/100</span>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="result-card" style="margin-left:24px;animation-delay:.2s">
+      <div class="result-card-header">
+        <div class="student-info">
+          <div class="avatar avatar-teal">PM</div>
+          <div>
+            <div class="student-name">Priya Mehta</div>
+            <div class="student-roll">CS2024002</div>
+          </div>
+        </div>
+        <span class="grade-badge grade-A">CGPA 8.6</span>
+      </div>
+      <div class="subject-row">
+        <span class="subject-name">Computer Networks</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+        <span class="subject-marks">80/100</span>
+      </div>
+      <div class="subject-row">
+        <span class="subject-name">Web Technologies</span>
+        <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+        <span class="subject-marks">88/100</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <span class="stat-num" data-target="5000">0</span>
+      <span class="stat-label">Students Enrolled</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="120">0</span>
+      <span class="stat-label">Subjects Offered</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="25000">0</span>
+      <span class="stat-label">Results Processed</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" data-target="8">0</span>
+      <span class="stat-label">Departments</span>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH PORTAL -->
+<section class="section" id="search">
+  <div class="section-label">Result Lookup</div>
+  <h2 class="section-title">Check Your Results</h2>
+  <p class="section-sub">Search by roll number, student name, or filter by department and semester to view detailed result cards.</p>
+
+  <div class="search-portal reveal">
+    <div class="portal-tabs">
+      <button class="tab active" onclick="switchTab(this,'roll')">By Roll No.</button>
+      <button class="tab" onclick="switchTab(this,'name')">By Name</button>
+      <button class="tab" onclick="switchTab(this,'dept')">By Department</button>
+    </div>
+
+    <div class="search-form" id="searchForm">
+      <div class="form-group" id="rollField">
+        <label class="form-label">Roll Number</label>
+        <input class="form-input" placeholder="e.g. CS2024001" id="rollInput">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Academic Year</label>
+        <select class="form-select" id="yearSelect">
+          <option value="">All Years</option>
+          <option value="2024-25" selected>2024-25</option>
+          <option value="2023-24">2023-24</option>
+          <option value="2022-23">2022-23</option>
+        </select>
+      </div>
+      <button class="search-btn" onclick="fetchResult()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </button>
+    </div>
+
+    <!-- Demo Result Table -->
+    <div class="result-table-wrap" id="resultTable" style="display:none">
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subject</th>
+            <th>Code</th>
+            <th>Marks</th>
+            <th>Total</th>
+            <th>%</th>
+            <th>Grade</th>
+            <th>Grade Pt</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+
+    <div class="cgpa-display" id="cgpaDisplay" style="display:none">
+      <div>
+        <div class="cgpa-label">CUMULATIVE GRADE POINT AVERAGE</div>
+        <div class="cgpa-value" id="cgpaVal">–</div>
+      </div>
+      <div class="cgpa-bar-wrap">
+        <div class="cgpa-label">Performance</div>
+        <div class="cgpa-bar"><div class="cgpa-bar-fill" id="cgpaBarFill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="features-inner">
+    <div class="features-header">
+      <div>
+        <div class="section-label">Core Features</div>
+        <h2 class="section-title">Everything You Need</h2>
+      </div>
+      <p class="section-sub">Built with Spring Boot 3.2, Spring Data JPA, H2/MySQL, Lombok, and Springdoc OpenAPI for a complete academic management system.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card blue reveal">
+        <div class="feature-icon blue">🎓</div>
+        <div class="feature-title">Student Management</div>
+        <p class="feature-desc">Complete CRUD for student profiles. Search by name, roll number, or department. Tracks CGPA and subject count automatically.</p>
+      </div>
+      <div class="feature-card teal reveal">
+        <div class="feature-icon teal">📚</div>
+        <div class="feature-title">Subject Catalogue</div>
+        <p class="feature-desc">Manage subjects with unique codes, credit hours, department, and semester mapping. Prevents duplicate codes with validation.</p>
+      </div>
+      <div class="feature-card amber reveal">
+        <div class="feature-icon amber">📊</div>
+        <div class="feature-title">Auto Grade Calculation</div>
+        <p class="feature-desc">GradeCalculator utility auto-computes letter grades (O to F), 10-point grade points, percentages, and PASS/FAIL status.</p>
+      </div>
+      <div class="feature-card green reveal">
+        <div class="feature-icon green">🔌</div>
+        <div class="feature-title">REST API + Swagger</div>
+        <p class="feature-desc">Full RESTful endpoints with CORS enabled. Interactive Swagger UI at /swagger-ui.html for testing without Postman.</p>
+      </div>
+      <div class="feature-card blue reveal">
+        <div class="feature-icon blue">🛡️</div>
+        <div class="feature-title">Global Exception Handling</div>
+        <p class="feature-desc">Consistent JSON error responses for 404 Not Found, 400 validation errors, and 500 server errors via @RestControllerAdvice.</p>
+      </div>
+      <div class="feature-card teal reveal">
+        <div class="feature-icon teal">🗄️</div>
+        <div class="feature-title">Dual Database Support</div>
+        <p class="feature-desc">Ships with H2 in-memory DB for instant start. Switch to MySQL with a single config block — no code changes needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- API SECTION -->
+<section class="api-section" id="api">
+  <div class="api-inner">
+    <div>
+      <div class="section-label">REST API Reference</div>
+      <h2 class="section-title" style="color:#fff">24 Endpoints Ready</h2>
+      <p class="section-sub">All endpoints return JSON and follow REST conventions. CORS is enabled globally.</p>
+
+      <div class="endpoint-list reveal">
+        <div class="endpoint-item">
+          <span class="method-badge method-post">POST</span>
+          <span class="endpoint-path">/api/students</span>
+          <span class="endpoint-desc">Create student</span>
+        </div>
+        <div class="endpoint-item">
+          <span class="method-badge method-get">GET</span>
+          <span class="endpoint-path">/api/students/roll/{no}</span>
+          <span class="endpoint-desc">Get by roll number</span>
+        </div>
+        <div class="endpoint-item">
+          <span class="method-badge method-post">POST</span>
+          <span class="endpoint-path">/api/results</span>
+          <span class="endpoint-desc">Add result</span>
+        </div>
+        <div class="endpoint-item">
+          <span class="method-badge method-get">GET</span>
+          <span class="endpoint-path">/api/results/student/{id}/cgpa</span>
+          <span class="endpoint-desc">Get CGPA</span>
+        </div>
+        <div class="endpoint-item">
+          <span class="method-badge method-put">PUT</span>
+          <span class="endpoint-path">/api/results/{id}</span>
+          <span class="endpoint-desc">Update result</span>
+        </div>
+        <div class="endpoint-item">
+          <span class="method-badge method-delete">DEL</span>
+          <span class="endpoint-path">/api/subjects/{id}</span>
+          <span class="endpoint-desc">Delete subject</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-panel reveal">
+      <div class="code-header">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+        <span class="code-title">POST /api/results — Response</span>
+      </div>
+      <div class="code-body">
+<span class="cmt">// 201 Created</span>
+{
+  <span class="key">"id"</span>: <span class="num">42</span>,
+  <span class="key">"studentId"</span>: <span class="num">1</span>,
+  <span class="key">"studentName"</span>: <span class="str">"Aarav Sharma"</span>,
+  <span class="key">"rollNumber"</span>: <span class="str">"CS2024001"</span>,
+  <span class="key">"subjectId"</span>: <span class="num">3</span>,
+  <span class="key">"subjectName"</span>: <span class="str">"Database Management"</span>,
+  <span class="key">"subjectCode"</span>: <span class="str">"CS303"</span>,
+  <span class="key">"marksObtained"</span>: <span class="num">94</span>,
+  <span class="key">"totalMarks"</span>: <span class="num">100</span>,
+  <span class="key">"grade"</span>: <span class="str">"O"</span>,
+  <span class="key">"gradePoint"</span>: <span class="num">10.0</span>,
+  <span class="key">"percentage"</span>: <span class="num">94.0</span>,
+  <span class="key">"examType"</span>: <span class="str">"FINAL"</span>,
+  <span class="key">"academicYear"</span>: <span class="str">"2024-25"</span>,
+  <span class="key">"status"</span>: <span class="str">"PASS"</span>
+}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GRADE SCALE -->
+<section class="section" id="grades">
+  <div class="grade-section">
+    <div>
+      <div class="section-label">Grade System</div>
+      <h2 class="section-title">10-Point Grading Scale</h2>
+      <p class="section-sub">Grades are calculated automatically by the GradeCalculator utility based on percentage scored.</p>
+
+      <div class="grade-grid reveal">
+        <div class="grade-row">
+          <div class="grade-letter">O</div>
+          <span class="grade-range">≥ 90%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:100%"></div></div>
+          <span class="grade-point">10.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">A+</div>
+          <span class="grade-range">≥ 80%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:90%"></div></div>
+          <span class="grade-point">9.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">A</div>
+          <span class="grade-range">≥ 70%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:80%"></div></div>
+          <span class="grade-point">8.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">B+</div>
+          <span class="grade-range">≥ 60%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:70%"></div></div>
+          <span class="grade-point">7.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">B</div>
+          <span class="grade-range">≥ 50%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:60%"></div></div>
+          <span class="grade-point">6.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">C</div>
+          <span class="grade-range">≥ 40%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:50%"></div></div>
+          <span class="grade-point">5.0</span>
+        </div>
+        <div class="grade-row">
+          <div class="grade-letter">F</div>
+          <span class="grade-range">< 40%</span>
+          <div class="gp-bar"><div class="gp-fill" style="width:5%;background:#ef4444"></div></div>
+          <span class="grade-point">0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="section-label">Performance Distribution</div>
+      <h3 class="section-title" style="font-size:1.4rem">Current Batch Overview</h3>
+
+      <div class="doughnut-wrap">
+        <svg class="doughnut-svg" viewBox="0 0 100 100">
+          <!-- Total circumference of r=35 circle ≈ 220 -->
+          <circle cx="50" cy="50" r="35" stroke="#dbeafe" stroke-dasharray="220" stroke-dashoffset="0"/>
+          <!-- O grade: 20% = 44 -->
+          <circle cx="50" cy="50" r="35" stroke="#2563eb" stroke-dasharray="44 176" stroke-dashoffset="0"/>
+          <!-- A+: 25% = 55 -->
+          <circle cx="50" cy="50" r="35" stroke="#7c3aed" stroke-dasharray="55 165" stroke-dashoffset="-44"/>
+          <!-- A: 30% = 66 -->
+          <circle cx="50" cy="50" r="35" stroke="#0d9488" stroke-dasharray="66 154" stroke-dashoffset="-99"/>
+          <!-- B+: 15% = 33 -->
+          <circle cx="50" cy="50" r="35" stroke="#d97706" stroke-dasharray="33 187" stroke-dashoffset="-165"/>
+          <!-- B-F: 10% = 22 -->
+          <circle cx="50" cy="50" r="35" stroke="#e11d48" stroke-dasharray="22 198" stroke-dashoffset="-198"/>
+        </svg>
+        <div class="doughnut-center">
+          <span class="doughnut-val">90%</span>
+          <span class="doughnut-text">Pass Rate</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#2563eb"></div>
+          <span>Outstanding (O)</span>
+          <span class="legend-num">20%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#7c3aed"></div>
+          <span>Excellent (A+)</span>
+          <span class="legend-num">25%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#0d9488"></div>
+          <span>Very Good (A)</span>
+          <span class="legend-num">30%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#d97706"></div>
+          <span>Good (B+)</span>
+          <span class="legend-num">15%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#e11d48"></div>
+          <span>Below B / Fail</span>
+          <span class="legend-num">10%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-banner">
+  <div>
+    <div class="cta-title">Ready to Deploy?</div>
+    <div class="cta-sub">Run with <code style="background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;font-family:monospace">mvn spring-boot:run</code> and visit localhost:8080</div>
+  </div>
+  <div class="cta-actions">
+    <a href="#api" class="btn-white">📡 View API Docs</a>
+    <a href="#search" class="btn-ghost">🔍 Try Live Demo</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">🎓 Student Result Portal</div>
+  <div class="footer-links">
+    <a href="#search">Results</a>
+    <a href="#features">Features</a>
+    <a href="#api">API</a>
+    <a href="#grades">Grades</a>
+  </div>
+  <div class="footer-copy">Built with Spring Boot 3.2 · Java 17 · H2/MySQL</div>
+</footer>
+
+<script>
+// ── HAMBURGER ──────────────────────────────────────────────
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobileNav');
+hamburger.addEventListener('click', () => mobileNav.classList.toggle('open'));
+function closeNav() { mobileNav.classList.remove('open'); }
+
+// ── COUNTER ANIMATION ──────────────────────────────────────
+function animateCounter(el, target) {
+  const dur = 1400;
+  const step = target / (dur / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = Math.round(current).toLocaleString();
+    if (current >= target) clearInterval(timer);
+  }, 16);
+}
+
+const counterObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      animateCounter(el, parseInt(el.dataset.target));
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+// ── REVEAL ON SCROLL ───────────────────────────────────────
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 80);
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── TAB SWITCH ─────────────────────────────────────────────
+function switchTab(btn, type) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  const rollField = document.getElementById('rollField');
+  const label     = rollField.querySelector('.form-label');
+  const input     = rollField.querySelector('.form-input');
+
+  if (type === 'roll') {
+    label.textContent = 'Roll Number';
+    input.placeholder = 'e.g. CS2024001';
+  } else if (type === 'name') {
+    label.textContent = 'Student Name';
+    input.placeholder = 'e.g. Aarav Sharma';
+  } else {
+    label.textContent = 'Department';
+    input.placeholder = 'e.g. Computer Science';
+  }
+}
+
+// ── DEMO DATA ──────────────────────────────────────────────
+const demoData = {
+  'CS2024001': {
+    name: 'Aarav Sharma',
+    results: [
+      { subject: 'Data Structures',    code: 'CS301', marks: 92, total: 100 },
+      { subject: 'Operating Systems',  code: 'CS302', marks: 87, total: 100 },
+      { subject: 'Database Management',code: 'CS303', marks: 94, total: 100 },
+      { subject: 'Computer Networks',  code: 'CS304', marks: 88, total: 100 },
+    ]
+  },
+  'CS2024002': {
+    name: 'Priya Mehta',
+    results: [
+      { subject: 'Data Structures',    code: 'CS301', marks: 78, total: 100 },
+      { subject: 'Operating Systems',  code: 'CS302', marks: 82, total: 100 },
+      { subject: 'Computer Networks',  code: 'CS304', marks: 85, total: 100 },
+    ]
+  },
+  'IT2024001': {
+    name: 'Rohit Verma',
+    results: [
+      { subject: 'Web Technologies',   code: 'IT201', marks: 55, total: 100 },
+      { subject: 'Data Structures',    code: 'CS301', marks: 38, total: 100 },
+    ]
+  },
+};
+
+function calcGrade(pct) {
+  if (pct >= 90) return { g: 'O',  gp: 10 };
+  if (pct >= 80) return { g: 'A+', gp: 9  };
+  if (pct >= 70) return { g: 'A',  gp: 8  };
+  if (pct >= 60) return { g: 'B+', gp: 7  };
+  if (pct >= 50) return { g: 'B',  gp: 6  };
+  if (pct >= 40) return { g: 'C',  gp: 5  };
+  return { g: 'F', gp: 0 };
+}
+
+function fetchResult() {
+  const rollInput = document.getElementById('rollInput').value.trim().toUpperCase() || 'CS2024001';
+  const data = demoData[rollInput];
+
+  const table = document.getElementById('resultTable');
+  const body  = document.getElementById('resultBody');
+  const cgpa  = document.getElementById('cgpaDisplay');
+  const cgpaV = document.getElementById('cgpaVal');
+  const cgpaB = document.getElementById('cgpaBarFill');
+
+  if (!data) {
+    body.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:24px;color:#9ca3af">No results found for roll number <strong>${rollInput}</strong>. Try CS2024001, CS2024002, or IT2024001.</td></tr>`;
+    table.style.display = 'block';
+    cgpa.style.display  = 'none';
+    return;
+  }
+
+  let totalGP = 0;
+  body.innerHTML = data.results.map((r, i) => {
+    const pct = (r.marks / r.total * 100).toFixed(1);
+    const { g, gp } = calcGrade(parseFloat(pct));
+    totalGP += gp;
+    const statusHtml = g === 'F'
+      ? '<span class="status-fail">✗ FAIL</span>'
+      : '<span class="status-pass">✓ PASS</span>';
+    const gradeColor = ['O','A+'].includes(g) ? '#065f46'
+                     : g === 'A'              ? '#1e40af'
+                     : ['B+','B'].includes(g) ? '#5b21b6'
+                     : g === 'C'              ? '#92400e' : '#991b1b';
+    const gradeBg    = ['O','A+'].includes(g) ? '#d1fae5'
+                     : g === 'A'              ? '#dbeafe'
+                     : ['B+','B'].includes(g) ? '#ede9fe'
+                     : g === 'C'              ? '#fef3c7' : '#fee2e2';
+    return `<tr>
+      <td>${i+1}</td>
+      <td style="font-weight:500">${r.subject}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${r.code}</td>
+      <td style="font-family:var(--mono);font-weight:600">${r.marks}</td>
+      <td style="color:var(--ink-muted)">${r.total}</td>
+      <td style="font-family:var(--mono)">${pct}%</td>
+      <td><span style="background:${gradeBg};color:${gradeColor};padding:3px 10px;border-radius:100px;font-size:.78rem;font-weight:700;font-family:var(--mono)">${g}</span></td>
+      <td style="font-family:var(--mono);font-weight:600">${gp}.0</td>
+      <td>${statusHtml}</td>
+    </tr>`;
+  }).join('');
+
+  const cgpaScore = (totalGP / data.results.length).toFixed(2);
+  cgpaV.textContent = cgpaScore;
+  cgpaB.style.width  = (cgpaScore / 10 * 100) + '%';
+
+  table.style.display = 'block';
+  cgpa.style.display  = 'flex';
+  table.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Enter key support
+document.getElementById('rollInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') fetchResult();
+});
+</script>
+</body>
+</html>
